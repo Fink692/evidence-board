@@ -94,7 +94,7 @@ describe('public recording in separate object storage', () => {
       handleWalkthrough(videoRequest({}, 'HEAD'), fixture.bucket, download),
     ]);
     expect(first.status).toBe(206); expect(second.status).toBe(200);
-    expect(download).toHaveBeenCalledExactlyOnceWith(WALKTHROUGH.source, expect.objectContaining({ redirect: 'error' }));
+    expect(download).toHaveBeenCalledExactlyOnceWith(WALKTHROUGH.source, expect.objectContaining({ redirect: 'manual' }));
     expect(fixture.put).toHaveBeenCalledOnce();
     expect(Buffer.from(await first.arrayBuffer())).toEqual((await videoBytes()).subarray(0, 16));
   });
@@ -105,6 +105,8 @@ describe('public recording in separate object storage', () => {
     expect(badHash.status).toBe(503);
     const badSize = await handleWalkthrough(videoRequest(), fixture.bucket, async () => new Response('wrong', { headers: { 'Content-Length': '5' } }));
     expect(badSize.status).toBe(503);
+    const redirected = await handleWalkthrough(videoRequest(), fixture.bucket, async () => new Response(null, { status: 302, headers: { Location: 'https://example.com/untrusted.mp4' } }));
+    expect(redirected.status).toBe(503);
     expect(fixture.put).not.toHaveBeenCalled();
   });
   it('exposes no public mutation method and reports an unavailable binding honestly', async () => {

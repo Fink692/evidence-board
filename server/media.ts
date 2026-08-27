@@ -36,7 +36,9 @@ function rangeFor(value: string | null): ByteRange | null {
 }
 
 async function fill(bucket: MediaBucket, download: typeof fetch) {
-  const response = await download(WALKTHROUGH.source, { redirect: 'error', signal: AbortSignal.timeout(45_000) });
+  // Workers supports manual/follow, not the browser-only redirect:error mode.
+  // Manual plus the status check below rejects every redirect without following it.
+  const response = await download(WALKTHROUGH.source, { redirect: 'manual', signal: AbortSignal.timeout(45_000) });
   if (!response.ok || !response.body) { await response.body?.cancel(); throw new Error(`Pinned recording could not be fetched (HTTP ${response.status}).`); }
   const declared = response.headers.get('content-length');
   if (declared && Number(declared) !== WALKTHROUGH.bytes) { await response.body.cancel(); throw new Error('Recording size does not match.'); }
