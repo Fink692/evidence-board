@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Watch Evidence Board use real native WebMCP tools, human review, citations, and Undo in a 2:40 walkthrough.">
+  <meta name="theme-color" content="#203b32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <title>Evidence Board — The walkthrough</title>
+  <style>
+    @font-face{font-family:DM;src:url('/fonts/dm-sans-regular.ttf')}@font-face{font-family:Instrument;src:url('/fonts/instrument-serif.ttf')}
+    *{box-sizing:border-box}body{margin:0;background:#f7f7f1;color:#233e35;font-family:DM,system-ui,sans-serif;line-height:1.65}main{max-width:1240px;margin:auto;padding:34px 28px 60px}header{display:flex;justify-content:space-between;gap:24px;border-bottom:1px solid #d7ddcf;padding-bottom:22px}a{color:inherit;text-underline-offset:4px}header a{text-decoration:none}header strong{font-size:18px}h1{font:normal clamp(38px,6vw,68px)/1.1 Instrument,Georgia,serif;margin:38px 0 16px}p{max-width:790px;color:#516357}.eyebrow{font-size:11px;letter-spacing:2px;margin-top:30px}video{display:block;width:100%;aspect-ratio:8/5;background:#203b32;border:1px solid #ced7c8;border-radius:12px;margin:26px 0 20px}.links{display:flex;flex-wrap:wrap;gap:12px}.links a{padding:10px 16px;border:1px solid #cdd7c6;border-radius:6px;text-decoration:none;background:#fff}.links a.primary{background:#203b32;color:#fff}details{margin-top:28px;padding:20px;border:1px solid #d7ddcf;border-radius:10px}summary{cursor:pointer}details p:last-child{margin-bottom:0}footer{margin-top:38px;font-size:12px;color:#566651}@media(max-width:600px){main{padding:22px 16px 40px}header{font-size:13px}video{border-radius:6px}.links a{font-size:13px}}
+  </style>
+</head>
+<body><main>
+  <header><a href="/"><strong>Evidence Board</strong></a><a href="/?guest=1">Open editable sample ↗</a></header>
+  <div class="eyebrow">THE WORKFLOW, IN 2 MINUTES 40 SECONDS</div>
+  <h1>From a source to a decision<br>you can inspect.</h1>
+  <p>Watch real native WebMCP calls read research and prepare a proposal. Review exact changes, approve a selection, export a cited brief, and undo the accepted edits.</p>
+  <video controls preload="metadata" poster="/walkthrough-poster.png" aria-label="Evidence Board walkthrough with narration and captions">
+    <source src="/evidence-board-walkthrough.mp4" type="video/mp4">
+    <track kind="captions" src="/walkthrough.en-CA.vtt" srclang="en-CA" label="English captions" default>
+    Your browser cannot play this video. Use the download link below.
+  </video>
+  <div class="links"><a class="primary" href="/?guest=1">Try the editable sample ↗</a><a href="/evidence-board-walkthrough.mp4" download>Download video</a><a href="/walkthrough.en-CA.vtt" download>Download captions</a><a href="https://github.com/Fink692/evidence-board" target="_blank" rel="noopener noreferrer">MIT source code ↗</a></div>
+  <details><summary>What this recording demonstrates</summary><p>This is a real capture of the public app in Chromium 151 with native WebMCP enabled. Playwright invokes four native tools and operates the human review controls for a reproducible walkthrough. The app's native API is not mocked. No external language model participates.</p><p>The research scenario and recommendations are illustrative, with published sources and explicit uncertainty. The sample is stored in an isolated browser profile; no private owner boards or credentials appear. The narration uses the generic Microsoft Linda voice in Canadian English. Captions are included.</p><p>Tools shown: <code>get_board_summary</code>, <code>get_evidence</code>, <code>propose_change_set</code>, and <code>create_brief</code>. All ten application tools are registered. Human approval is separate from tool execution.</p></details>
+  <footer>Better evidence. Clearer decisions. · Built for The WebMCP Challenge</footer>
+</main></body>
+</html>

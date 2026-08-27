@@ -28,7 +28,9 @@
 .public-principles svg { color: #68806c; }
 .public-principles h2 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: 22px; margin: 17px 0 10px; }
 .public-principles p { font-size: 13px; line-height: 1.8; color: #6c796e; }
-.public-footer { max-width: 1250px; margin: auto; border-top: 1px solid #dce0d6; padding: 22px 0 30px; display: flex; justify-content: space-between; gap: 20px; color: #819084; font-size: 11px; }
+.public-footer { max-width: 1250px; margin: auto; border-top: 1px solid #dce0d6; padding: 22px 0 30px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; color: #5f7063; font-size: 11px; }
+.public-footer nav { display: flex; flex-wrap: wrap; gap: 20px; }
+.public-footer a { display: inline-flex; align-items: center; gap: 5px; color: inherit; text-underline-offset: 4px; }
 .guest-topbar { height: 42px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; padding: 0 21px; gap: 15px; background: #e7eee3; border-bottom: 1px solid #cfdbc9; color: #4f6957; font-size: 11px; }
 .guest-topbar > span, .guest-topbar > button { display: inline-flex; align-items: center; gap: 9px; }
 .guest-topbar > button { padding: 7px 0 7px 8px; border: 0; color: inherit; background: transparent; font: inherit; font-weight: 600; cursor: pointer; }

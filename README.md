@@ -4,7 +4,11 @@
 
 ## Try the sample
 
-Open the site and choose **Open editable sample**, or visit /?guest=1. No sign-in is required. Each browser profile gets an editable copy with eight published sources, 23 research cards, 25 connections, three unresolved conflicts, and three prepared review suggestions. The scenario and suggestions are illustrative; no results about a user's company are invented.
+Open [Evidence Board](https://evidence-board-judging.fink692.chatgpt.site/) and choose **Open editable sample**, or [go directly to your sample](https://evidence-board-judging.fink692.chatgpt.site/?guest=1). No sign-in is required. Each browser profile gets an editable copy with eight published sources, 23 research cards, 25 connections, three unresolved conflicts, and three prepared review suggestions. The scenario and suggestions are illustrative; no results about a user's company are invented.
+
+[Watch the 2:40 walkthrough](https://evidence-board-judging.fink692.chatgpt.site/walkthrough.html), with narration and captions. It shows real native WebMCP calls and selective review in the public app. Playwright drives the calls and review controls; no external language model participates.
+
+[![Evidence Board: published sources, connected research, unresolved questions, and a reviewable sample proposal](public/walkthrough-poster.png)](https://evidence-board-judging.fink692.chatgpt.site/?guest=1)
 
 Edits, pending proposals, review selections, activity, and undo history are saved on this device. They are not synced between devices or sent to the account API. Use **Sample options** to export a full backup or explicitly replace your copy. Anyone using the same browser profile may see it; clearing browser data removes it. Keep one editing tab open. Detected competing edits stop saving rather than silently replace the other copy.
 
@@ -43,7 +47,7 @@ pnpm exec playwright install chromium
 pnpm test:e2e
 ~~~
 
-The tests cover domain rules, native adapter contracts, selective review, full-session persistence, real SQLite API round trips, owner isolation, stale saves, Unicode storage, recovery, guest storage failures, and source provenance. Browser tests exercise the current sample, review, manual editing, imports, export, undo, keyboard/mobile access, and actual native WebMCP where available. Unsupported native builds are explicitly skipped; no API mock is installed in the page. Set EVIDENCE_BASE_URL to run the browser suite on your own hosted deployment using fresh isolated browser contexts.
+The tests cover domain rules, native adapter contracts, selective review, full-session persistence, real SQLite API round trips, owner isolation, stale saves, Unicode storage, recovery, guest storage failures, and source provenance. Browser tests exercise the current sample, review, manual editing, saved-session recovery, export, undo, keyboard/mobile access, and actual native WebMCP where available. Unsupported native builds are explicitly skipped; no API mock is installed in the page. Set EVIDENCE_BASE_URL to run the browser suite on your own hosted deployment using fresh isolated browser contexts.
 
 A build emits browser assets in dist/client and the Sites Worker in dist/server/index.js. The Sites plugin packages binding metadata and Drizzle migrations. For schema changes, edit db/schema.ts, run pnpm db:generate, and inspect the migration. Production identity comes from Sites; there is no production local-auth bypass or application AI key.
 

@@ -1,0 +1,206 @@
+WEBVTT
+
+NOTE Local synthetic narration draft: Microsoft System.Speech, stock en-CA voice. No external model or publication.
+
+scene-01-cue-01
+00:00:00.200 --> 00:00:01.715
+Evidence Board turns a research
+
+scene-01-cue-02
+00:00:01.715 --> 00:00:04.855
+question into a decision you can inspect.
+
+scene-01-cue-03
+00:00:04.855 --> 00:00:09.215
+Instead of a confident answer and a pile
+of links, it keeps claims,
+
+scene-01-cue-04
+00:00:09.215 --> 00:00:12.800
+sources, and unresolved questions
+together.
+
+scene-02-cue-01
+00:00:16.200 --> 00:00:18.248
+This editable sample asks whether a small
+
+scene-02-cue-02
+00:00:18.248 --> 00:00:21.614
+software team should adopt AI coding
+tools.
+
+scene-02-cue-03
+00:00:21.614 --> 00:00:25.301
+Eight published sources connect to twenty
+three research cards.
+
+scene-02-cue-04
+00:00:25.301 --> 00:00:29.182
+Support, challenges, and context stay
+visible.
+
+scene-02-cue-05
+00:00:29.182 --> 00:00:30.878
+The recommendation is illustrative,
+
+scene-02-cue-06
+00:00:30.878 --> 00:00:34.253
+not a result measured inside anyone's
+company.
+
+scene-03-cue-01
+00:00:36.200 --> 00:00:39.715
+Open an evidence card to see the
+researcher's interpretation beside
+
+scene-03-cue-02
+00:00:39.715 --> 00:00:42.285
+its recorded source and excerpt.
+
+scene-03-cue-03
+00:00:42.285 --> 00:00:45.655
+The source link leads to the original
+publication.
+
+scene-03-cue-04
+00:00:45.655 --> 00:00:50.640
+Conflicts remain explicit, and Check
+Evidence finds structural gaps.
+
+scene-03-cue-05
+00:00:50.640 --> 00:00:53.370
+It does not verify facts.
+
+scene-04-cue-01
+00:00:55.200 --> 00:00:57.500
+A compatible browser agent can work on
+
+scene-04-cue-02
+00:00:57.500 --> 00:01:00.760
+this board through ten Web M C P tools.
+
+scene-04-cue-03
+00:01:00.760 --> 00:01:05.910
+Here, native tool calls read accepted
+research and retrieve evidence.
+
+scene-04-cue-04
+00:01:05.910 --> 00:01:08.605
+This recording demonstrates tool
+execution,
+
+scene-04-cue-05
+00:01:08.605 --> 00:01:11.305
+not an external model session.
+
+scene-05-cue-01
+00:01:13.200 --> 00:01:18.130
+Now a native tool call proposes a cautious
+change with a rationale.
+
+scene-05-cue-02
+00:01:18.130 --> 00:01:21.165
+Accepted research has not changed.
+
+scene-05-cue-03
+00:01:21.165 --> 00:01:23.280
+The proposal waits in a review panel,
+
+scene-05-cue-04
+00:01:23.280 --> 00:01:27.270
+where a person can inspect exact
+operations, adjust wording,
+
+scene-05-cue-05
+00:01:27.270 --> 00:01:29.395
+and select what to keep.
+
+scene-05-cue-06
+00:01:29.395 --> 00:01:33.075
+No exposed tool can approve its own
+proposal.
+
+scene-06-cue-01
+00:01:38.200 --> 00:01:42.405
+Review the changes and approve only the
+selected operations.
+
+scene-06-cue-02
+00:01:42.405 --> 00:01:44.290
+The accepted revision advances,
+
+scene-06-cue-03
+00:01:44.290 --> 00:01:47.925
+while unselected suggestions stay out of
+the record.
+
+scene-06-cue-04
+00:01:47.925 --> 00:01:49.830
+The activity view distinguishes tool
+
+scene-06-cue-05
+00:01:49.830 --> 00:01:52.655
+execution from the person's approval.
+
+scene-07-cue-01
+00:01:55.200 --> 00:01:58.515
+Create a decision brief from the accepted
+board.
+
+scene-07-cue-02
+00:01:58.515 --> 00:02:01.185
+Citations point back to recorded sources,
+
+scene-07-cue-03
+00:02:01.185 --> 00:02:04.535
+and the Markdown export preserves the
+result.
+
+scene-07-cue-04
+00:02:04.535 --> 00:02:07.830
+Pending suggestions do not enter the
+brief.
+
+scene-07-cue-05
+00:02:07.830 --> 00:02:10.460
+Undo restores the previous accepted
+content,
+
+scene-07-cue-06
+00:02:10.460 --> 00:02:13.050
+keeping the workflow reversible.
+
+scene-08-cue-01
+00:02:15.200 --> 00:02:17.395
+This separate judging workspace saves each
+
+scene-08-cue-02
+00:02:17.395 --> 00:02:20.525
+visitor's editable sample on that device.
+
+scene-08-cue-03
+00:02:20.525 --> 00:02:25.060
+Personal signed in boards use isolated
+account storage instead.
+
+scene-08-cue-04
+00:02:25.060 --> 00:02:29.395
+No private owner data was copied into the
+judging workspace.
+
+scene-09-cue-01
+00:02:31.200 --> 00:02:34.508
+Built with Codex, React, and TypeScript.
+
+scene-09-cue-02
+00:02:34.508 --> 00:02:36.136
+No built in model.
+
+scene-09-cue-03
+00:02:36.136 --> 00:02:37.554
+Better evidence.
+
+scene-09-cue-04
+00:02:37.554 --> 00:02:39.154
+Clearer decisions.
+

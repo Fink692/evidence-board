@@ -53,7 +53,9 @@ The real-browser checks demonstrated read purity, argument errors, a pending pro
 
 The current guest experience passed all 23 Playwright tests in Chromium 151.0.7922.34, including four actual native WebMCP tests. With explicit WebMCP/WebMCPTesting flags, all ten tools registered; a native read preserved accepted content; invalid arguments were rejected; a native write produced a pending proposal without acceptance; and pre-dispatch cancellation produced no proposal. A wording-only update preserved omitted confidence fields. Actual navigation from the board to the landing page and back gave 10 → 0 → 10 tools. No modelContext mock or external model was used.
 
-The compiled app additionally passed desktop Chromium and mobile WebKit review, brief, export-state/undo, security-header, CSP, and no-external-request checks. Mobile started in the structured list without downloading the graph chunk. These observations concern the local compiled build; hosted verification is recorded separately after deployment. The 151 callback-signal limitation described above still applies.
+The corrected public judging release at [the hosted Site](https://evidence-board-judging.fink692.chatgpt.site/), source `8a93f6b7f262f1bff0b5acbf68f0d024eb758737`, also passed all 23 browser tests, including those four native cases, with one worker and no retries. An initial concurrent run had two document-navigation timeouts before application code loaded; the complete isolated run passed without changing application assertions. The real hosted walkthrough separately exercised four native calls, selective approval, cited export, exact Undo, and reload persistence.
+
+The earlier compiled preflight additionally passed desktop Chromium and mobile WebKit review, brief, export-state/undo, security-header, CSP, and no-external-request checks. Mobile started in the structured list without downloading the graph chunk. The 151 callback-signal limitation described above still applies. See [current verification and media scope](../submission/current-verification.md).
 
 ## Ten tools
 

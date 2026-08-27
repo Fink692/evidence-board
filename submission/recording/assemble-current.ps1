@@ -60,7 +60,7 @@ $utf8 = New-Object System.Text.UTF8Encoding($false)
 [IO.File]::WriteAllText((Join-Path $assetRoot 'assembly-metadata.json'), ($metadata | ConvertTo-Json -Depth 6) + "`n", $utf8)
 $framesPath = Join-Path $assetRoot 'frames'
 New-Item -ItemType Directory -Path $framesPath -Force | Out-Null
-foreach ($second in @(4, 22, 44, 66, 80, 94, 105, 120, 133, 143, 155)) {
+foreach ($second in @(4, 22, 44, 66, 80, 94, 105, 120, 127, 133, 143, 155)) {
     $framePath = Join-Path $framesPath ('frame-{0:000}.png' -f $second)
     & $Ffmpeg '-y' '-loglevel' 'error' '-ss' "$second" '-i' $outputFile '-an' '-sn' '-vframes' '1' '-threads' '2' $framePath
     if ($LASTEXITCODE -ne 0) { throw "Could not inspect video frame $second." }
