@@ -1,0 +1,42 @@
+{
+  "name": "evidence-board",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A shared evidence workspace for humans and browser agents.",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4173 --strictPort",
+    "build": "node scripts/clean-build.mjs && tsc -b && vite build && vite build --config vite.worker.config.ts",
+    "db:generate": "drizzle-kit generate",
+    "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
+    "typecheck": "tsc -b --pretty false",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:production": "node evals/check-production.mjs",
+    "check": "pnpm typecheck && pnpm test && pnpm build"
+  },
+  "dependencies": {
+    "@xyflow/react": "^12.8.5",
+    "drizzle-orm": "^0.45.2",
+    "lucide-react": "0.545.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@cloudflare/workers-types": "^5.20260826.1",
+    "@openai/sites-vite-plugin": "0.2.0",
+    "@playwright/test": "1.62.1",
+    "@types/node": "22.20.1",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "@vitejs/plugin-react": "^6.1.0",
+    "drizzle-kit": "^0.31.10",
+    "typescript": "5.9.3",
+    "vite": "8.2.2",
+    "vitest": "4.1.11"
+  },
+  "packageManager": "pnpm@11.19.0"
+}

@@ -1,0 +1,207 @@
+import type { ActivityEntry, BoardContent, BoardNode, Confidence, EvidenceLink, Operation } from '../domain/types';
+import { applyOperations, makeId, validateContent } from '../domain/validation';
+import { createBoardStore } from '../state/boardStore';
+
+export const SHOWCASE_BOARD_ID = 'research_ai_coding_showcase_v1';
+
+/** Published evidence; the decision scenario is illustrative, never a claimed user result. */
+export function createShowcaseStore() {
+  const createdAt = new Date().toISOString();
+  const sources: BoardContent['sources'] = [
+    {
+      id: 'source_copilot_trial', title: 'The Impact of AI on Developer Productivity: Evidence from GitHub Copilot',
+      publisher: 'Peng, Kalliamvakou, Cihon & Demirer', date: '2023-02-13',
+      url: 'https://arxiv.org/html/2302.06590v1', reliability: 'medium', fictional: false,
+      excerpt: 'Paraphrase: A randomized experiment measured how long professional developers needed to build a JavaScript HTTP server. A useful causal result for one bounded task; it does not measure a whole delivery process or current autonomous agents.',
+    },
+    {
+      id: 'source_enterprise_trials', title: 'The Effects of Generative AI on High-Skilled Work: Evidence from Three Field Experiments with Software Developers',
+      publisher: 'Cui, Demirer, Jaffe, Musolff, Peng & Salz', date: '',
+      url: 'https://demirermert.github.io/Papers/Demirer_AI_productivity.pdf', reliability: 'medium', fictional: false,
+      excerpt: 'Paraphrase: Three enterprise experiments estimate effects on completed tasks while accounting for incomplete tool adoption. Published June 2025; no publication day is specified. The preferred estimate describes adopters, not the effect of giving everyone a licence.',
+    },
+    {
+      id: 'source_metr_2025', title: 'Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity',
+      publisher: 'METR', date: '2025-07-10',
+      url: 'https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/', reliability: 'medium', fictional: false,
+      excerpt: 'Paraphrase: Experienced maintainers completed real issues in their own repositories under randomized AI-allowed and AI-disallowed conditions. Their measured slowdown differed from their perceived speedup. The cohort and early-2025 tools limit generalization.',
+    },
+    {
+      id: 'source_metr_2026', title: 'We are Changing our Developer Productivity Experiment Design',
+      publisher: 'METR', date: '2026-02-24',
+      url: 'https://metr.org/blog/2026-02-24-uplift-update/', reliability: 'low', fictional: false,
+      excerpt: 'Paraphrase: A newer experiment suggested possible speedups, but recruitment, task selection, compensation changes, and concurrent agents made the estimates unreliable. The authors distinguish their belief that newer tools help more from a dependable estimate of the effect.',
+    },
+    {
+      id: 'source_dora_2024', title: 'Highlights from the 10th DORA report',
+      publisher: 'Google Cloud / DORA', date: '2024-10-22',
+      url: 'https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report', reliability: 'medium', fictional: false,
+      excerpt: 'Paraphrase: Survey modelling associated greater AI adoption with better code quality and review speed, but lower delivery throughput and stability. These are observational relationships, not randomized causal effects.',
+    },
+    {
+      id: 'source_dora_2025', title: 'Announcing the 2025 DORA Report: State of AI-Assisted Software Development',
+      publisher: 'Google Cloud / DORA', date: '2025-09-24',
+      url: 'https://cloud.google.com/blog/products/ai-machine-learning/announcing-the-2025-dora-report', reliability: 'medium', fictional: false,
+      excerpt: 'Paraphrase: The 2025 survey found a positive relationship between AI adoption and delivery throughput while the relationship with delivery stability remained negative. Separate annual surveys are not a controlled comparison of the same teams.',
+    },
+    {
+      id: 'source_stackoverflow', title: 'AI — 2025 Stack Overflow Developer Survey',
+      publisher: 'Stack Overflow', date: '2025-07-29',
+      url: 'https://survey.stackoverflow.co/2025/ai', reliability: 'medium', fictional: false,
+      excerpt: 'Paraphrase: Respondents reported concerns about accuracy, almost-correct output, debugging effort, and agent security. Responses describe experiences and opinions, not measured defect rates. The survey release was announced on July 29, 2025.',
+    },
+    {
+      id: 'source_security', title: 'Do Users Write More Insecure Code with AI Assistants?',
+      publisher: 'Perry, Srivastava, Kumar & Boneh', date: '2023-12-18',
+      url: 'https://arxiv.org/html/2211.03622v3', reliability: 'medium', fictional: false,
+      excerpt: 'Paraphrase: A small user study found security failures and overconfidence with an older coding assistant. Five artificial tasks and a mostly university sample limit transfer to production. Date refers to revision 3; the paper was first posted November 7, 2022.',
+    },
+  ];
+
+  function card(id: string, kind: BoardNode['kind'], title: string, body: string, confidence: Confidence, sourceId?: string): BoardNode {
+    return { id, kind, title, body, confidence, ...(sourceId ? { sourceId } : {}), createdBy: 'sample', createdAt, position: { x: 0, y: 0 } };
+  }
+  const nodes: BoardNode[] = [
+    card('claim_pilot', 'claim', 'Start with a measured pilot, not a blanket rollout.',
+      'Sample recommendation: test AI assistance on bounded, reversible work before expanding access or autonomy. Published studies justify investigating benefits, but do not tell us what this team will gain. Treat the pilot as a decision process with a baseline, quality checks, and a clear way to stop. No local pilot results have been collected.', 'medium'),
+    card('claim_context', 'claim', 'The task and repository matter as much as the tool.',
+      'Synthesis: benefits appear to depend on the work, the developer, and the repository. A short coding task, weekly enterprise pull requests, and a familiar open-source issue are different units of work. Segment a pilot by task category and experience instead of averaging everything into one productivity claim.', 'medium'),
+    card('claim_measurement', 'claim', 'Measure the work, not just the feeling of speed.',
+      'Synthesis: perceived assistance can diverge from measured time, and plausible output can shift effort into debugging. Track active human time and elapsed delivery time separately. Include review, correction, integration, and abandoned attempts; collect developer sentiment as an additional measure rather than a substitute.', 'high'),
+    card('claim_review', 'claim', 'Keep people, tests, and security checks in the loop.',
+      'Sample operating requirement: every change needs an accountable human reviewer and the normal test and release process. Start with limited repository permissions and approved data handling. Survey concerns and an older security experiment justify caution; they do not establish the defect rate of a current product.', 'high'),
+    card('claim_delivery', 'claim', 'Optimize accepted delivery, not the volume of code.',
+      'Synthesis: more completed tasks or faster drafting is not automatically a better delivery system. Evaluate accepted changes, lead time, review burden, rework, escaped defects, and delivery stability together. A tool that moves the bottleneck to reviewers may not improve the outcome that matters.', 'high'),
+    card('claim_agents', 'claim', 'Today’s agent workflow still needs local evidence.',
+      'Open working hypothesis: this team might benefit from agents that work concurrently, but the selected studies cannot establish its return. Earlier assistants, different tool generations, and unreliable follow-up estimates limit transfer. Low confidence refers to the unmeasured local outcome. Only context links are recorded here; direct evidence remains a gap.', 'low'),
+
+    card('evidence_task', 'evidence', '55.8% less time on one bounded programming task.',
+      'Experiment: 95 professionals were randomized; 35 per arm completed the task and survey. Among completers, the JavaScript HTTP-server task took 71.17 minutes with Copilot versus 160.89 without (55.8% less time; reported 95% CI 21%–89%). Limitation: one task, recruited freelancers, 2022 tooling, and completion-conditioned analysis; not whole-team delivery.', 'medium', 'source_copilot_trial'),
+    card('evidence_enterprise', 'evidence', 'Enterprise adopters completed more weekly tasks.',
+      'Experiment: across 4,867 developers in three companies, the preferred pooled estimate was 26.08% more completed tasks per week, measured using pull requests (standard error 10.3 percentage points). This instrumental-variable estimate describes adopters. Individual experiments were noisy; task counts alone do not establish business value or long-term quality.', 'medium', 'source_enterprise_trials'),
+    card('evidence_experience', 'evidence', 'Less experienced developers gained more in the field study.',
+      'Study finding: less experienced developers had higher adoption and greater gains in the enterprise experiments. This suggests a reason to segment a local evaluation by experience. It does not imply that every novice benefits or that experienced developers cannot benefit.', 'medium', 'source_enterprise_trials'),
+    card('evidence_slowdown', 'evidence', 'Experienced maintainers took 19% longer with AI.',
+      'Experiment: 16 experienced developers completed 246 issues in familiar repositories. AI-allowed work took 19% longer on average, primarily using Cursor Pro and Claude 3.5/3.7 Sonnet. Limitation: this is a particular cohort and early-2025 workflow, not a general estimate for all developers or current agents.', 'medium', 'source_metr_2025'),
+    card('evidence_perception', 'evidence', 'The same developers still believed they were faster.',
+      'Study finding: participants predicted a 24% speedup before the METR experiment and believed they had achieved a 20% speedup afterward, despite the measured slowdown. Interpretation: satisfaction and perceived speed are useful experience measures, but should be checked against observed outcomes.', 'high', 'source_metr_2025'),
+    card('evidence_followup', 'evidence', 'Newer estimates hint at gains, with major uncertainty.',
+      'Preliminary follow-up: 10 returning and 47 new developers had estimated task-time changes of −18% (CI −38% to +9%) and −4% (CI −15% to +9%). Both intervals include no effect. METR considers the estimates unreliable because selection, lower compensation, and concurrent agents complicated measurement. They do not establish a current effect size.', 'low', 'source_metr_2026'),
+    card('evidence_workflow', 'evidence', 'Better workflow measures can coexist with delivery problems.',
+      'Observational result: DORA 2024 associated a 25% increase in AI adoption with 3.4% higher code quality and 3.1% faster code review. These modelled relationships are not randomized treatment effects. Read alongside the delivery outcomes from the same analysis.', 'medium', 'source_dora_2024'),
+    card('evidence_stability', 'evidence', 'DORA 2024 found lower throughput and stability.',
+      'Observational result: the same model associated a 25% increase in AI adoption with 1.5% lower delivery throughput and 7.2% lower delivery stability. These are not raw incident-rate percentage points and do not establish that AI caused deterioration. They challenge a simple “faster coding means faster delivery” story.', 'medium', 'source_dora_2024'),
+    card('evidence_dora_update', 'evidence', 'Throughput changed direction in 2025; stability did not.',
+      'Observational result: DORA 2025 found a positive relationship between AI adoption and delivery throughput, while the relationship with stability remained negative. Different annual surveys do not demonstrate a causal before-and-after improvement. Delivery practices and feedback still matter.', 'medium', 'source_dora_2025'),
+    card('evidence_trust', 'evidence', 'Developers reported more distrust than trust.',
+      'Survey: among 33,244 respondents to the accuracy question, 46% distrusted AI output accuracy and 33% trusted it. This is self-reported sentiment from a voluntary survey, not a measured error rate. Kept unlinked for review: decide which claim this observation actually informs.', 'medium', 'source_stackoverflow'),
+    card('evidence_debugging', 'evidence', 'Almost-correct answers can create extra debugging.',
+      'Survey: 66% of 31,476 respondents selected almost-correct solutions as a frustration, and 45% selected more time-consuming debugging of AI-generated code. Multiple selections were allowed. These reports motivate measuring correction effort; they do not quantify defect frequency.', 'medium', 'source_stackoverflow'),
+    card('evidence_agent_concerns', 'evidence', 'Agent concerns include accuracy and private information.',
+      'Survey: among 28,930 respondents to the agent-concerns question, 87% reported accuracy concerns and 81% security/privacy concerns. Opinions are not demonstrated failure rates. These concerns help frame adoption questions about permissions, data handling, and review.', 'medium', 'source_stackoverflow'),
+    card('evidence_security', 'evidence', 'An older assistant study found security overconfidence.',
+      'Experiment: 47 participants (33 assisted, 14 controls) attempted five security tasks. Assisted participants wrote insecure solutions more often on four tasks and were more likely to believe their answers were secure. Limitation: an older codex-davinci-002 model, artificial tasks, and a small, mostly university sample; not a current production vulnerability rate.', 'medium', 'source_security'),
+
+    card('question_task_fit', 'question', 'Which tasks improve after review and correction?',
+      'Proposed local evidence: compare small bug fixes, tests, documentation, and bounded features separately. Record difficulty and repository familiarity before work starts. Count review, rework, integration, and unsuccessful attempts. Use comparable tasks where practical and record selection effects. No observations have been added yet.', 'low'),
+    card('question_quality', 'question', 'Does the pilot change defects, rework, or security findings?',
+      'Proposed local evidence: maintain a defect and rework log tied to accepted changes; use the existing test and security process for assisted and unassisted work. Review any serious finding before expansion. A short pilot may miss rare failures, so absence of incidents is not proof of safety.', 'low'),
+    card('question_cost', 'question', 'What does each accepted change actually cost?',
+      'Proposed local evidence: account for licences, usage, training, human implementation time, reviewer time, and correction effort. Compare cost per accepted change within similar task categories. No prices, internal salaries, budgets, or savings have been assumed for your team.', 'low'),
+    card('question_parallel', 'question', 'How do we measure several agents working at once?',
+      'Proposed measurement plan: keep elapsed delivery time separate from active human time and agent runtime. Record overlapping work without adding overlapping wall-clock intervals together. Track the task and tool version, and state how cancelled or parallel attempts are counted. This question remains open pending a real pilot protocol.', 'low'),
+  ];
+
+  function link(evidenceId: string, claimId: string, stance: EvidenceLink['stance'], reason: string): EvidenceLink {
+    return { id: `link_${evidenceId.slice(9)}_${claimId.slice(6)}`, evidenceId, claimId, stance, reason, createdBy: 'sample' };
+  }
+  const links = [
+    link('evidence_task', 'claim_pilot', 'supports', 'A causal gain on one bounded task makes a limited evaluation worthwhile; the size is not a forecast for this team.'),
+    link('evidence_task', 'claim_context', 'supports', 'The narrow task and cohort define the setting in which this gain was observed.'),
+    link('evidence_task', 'claim_agents', 'context', 'A 2022 completion assistant does not measure a current concurrent-agent workflow.'),
+    link('evidence_enterprise', 'claim_pilot', 'supports', 'Field evidence of gains among adopters gives a reason to test for benefits in a local pilot.'),
+    link('evidence_enterprise', 'claim_delivery', 'context', 'Pull-request throughput is useful but is only one component of delivery and value.'),
+    link('evidence_experience', 'claim_context', 'supports', 'Experience-related differences support examining separate cohorts rather than assuming a uniform gain.'),
+    link('evidence_slowdown', 'claim_pilot', 'challenges', 'A credible slowdown result limits confidence that a pilot will pay off and argues for a reversible decision.'),
+    link('evidence_slowdown', 'claim_context', 'supports', 'Results on familiar, mature repositories differ from the bounded-task result; context is a plausible explanation, not a proven moderator.'),
+    link('evidence_slowdown', 'claim_agents', 'context', 'Early-2025 tools and this specific cohort cannot establish the current local outcome.'),
+    link('evidence_perception', 'claim_measurement', 'supports', 'A disagreement between perceived and measured speed directly motivates outcome measurement.'),
+    link('evidence_followup', 'claim_pilot', 'context', 'Possible newer gains make an updated evaluation relevant, but the unreliable estimate cannot justify a target saving.'),
+    link('evidence_followup', 'claim_agents', 'context', 'Concurrent-agent timing and selection problems identify a gap in the available evidence.'),
+    link('evidence_followup', 'claim_context', 'context', 'Tool generation and changing task selection make comparisons across periods difficult.'),
+    link('evidence_workflow', 'claim_delivery', 'context', 'Improved intermediate workflow measures need to be read alongside delivery outcomes.'),
+    link('evidence_stability', 'claim_pilot', 'challenges', 'The delivery associations warn that local coding improvements may not justify broader rollout.'),
+    link('evidence_stability', 'claim_review', 'supports', 'Stability concerns support retaining existing safeguards as an operating choice; causation is not established.'),
+    link('evidence_stability', 'claim_delivery', 'supports', 'Divergent workflow and delivery associations show why a single productivity measure is insufficient.'),
+    link('evidence_dora_update', 'claim_review', 'supports', 'Persistent stability concerns support retaining review and testing even when throughput looks better.'),
+    link('evidence_dora_update', 'claim_delivery', 'supports', 'Throughput and stability still move differently, so both belong in the scorecard.'),
+    link('evidence_debugging', 'claim_measurement', 'supports', 'Reported correction effort is a reason to include debugging in measured time.'),
+    link('evidence_debugging', 'claim_delivery', 'context', 'Extra correction work can consume apparent drafting gains; measure this locally.'),
+    link('evidence_debugging', 'claim_context', 'context', 'The usefulness of a suggestion may depend on how costly it is to verify for the task at hand.'),
+    link('evidence_agent_concerns', 'claim_review', 'context', 'Reported concerns inform operating requirements, but do not prove the effectiveness of a particular control.'),
+    link('evidence_agent_concerns', 'claim_agents', 'context', 'Agent-specific concerns make extrapolation from earlier assistants incomplete.'),
+    link('evidence_security', 'claim_review', 'supports', 'The observed failure mechanism supports independent security review; the historical rate is not a current forecast.'),
+  ];
+
+  const conflicts: BoardContent['conflicts'] = [
+    { id: 'conflict_productivity', title: 'Large gains and a maintainer slowdown coexist.',
+      description: 'The bounded-task and enterprise studies report gains while METR reports a slowdown in familiar repositories. Different tasks, cohorts, tool generations, and outcome measures prevent a clean head-to-head comparison. Keep the tension visible until local evidence is available.',
+      nodeIds: ['evidence_task', 'evidence_enterprise', 'evidence_slowdown'], resolved: false, createdBy: 'sample' },
+    { id: 'conflict_perception', title: 'Feeling faster did not mean finishing faster.',
+      description: 'In the same METR experiment, perceived speedup disagreed with measured task time. A pilot can respond by recording both, but that does not erase the discrepancy in the study. No local measurement has resolved this question for the illustrative team.',
+      nodeIds: ['evidence_slowdown', 'evidence_perception'], resolved: false, createdBy: 'sample' },
+    { id: 'conflict_delivery', title: 'The throughput association changed between annual surveys.',
+      description: 'DORA 2024 found a negative throughput relationship; DORA 2025 found a positive one. Stability concerns persisted. Separate annual surveys do not isolate the cause of this change, so neither direction should be treated as a guaranteed local effect.',
+      nodeIds: ['evidence_stability', 'evidence_dora_update'], resolved: false, createdBy: 'sample' },
+  ];
+  const conclusion = 'Illustrative decision: run a reversible four-week pilot on bounded, low-risk coding tasks. Keep review and release authority with people. First record a baseline and agree how comparable tasks, unsuccessful attempts, and parallel agents will be counted. During the pilot, track completion time, reviewer effort, rework, defects, and cost per accepted change. At the end, expand only in task categories where local results justify it; retain the normal quality and security gates. Treat a small pilot as directional evidence, not proof that rare failures cannot occur. No pilot results or savings have been collected for this sample.';
+
+  let content: BoardContent = validateContent({
+    id: SHOWCASE_BOARD_ID, title: 'AI coding: a measured rollout · Sample',
+    question: 'Should a small software team adopt AI coding assistants and agents?',
+    description: 'An illustrative adoption decision prepared by Codex at your request, using real published research checked August 27, 2026. The team, pilot, and decisions are examples, not facts about your company. Explore the map, read the sources, open the decision brief, then review three suggested changes. One unlinked observation and one claim without direct supporting evidence are deliberately left open. Confidence is a recorded assessment, not an automated fact check.',
+    conclusion: '', sources, nodes: [], links: [], conflicts: [],
+  });
+  let revision = 1;
+  const history: Array<{ content: BoardContent; revision: number; label: string; actor: 'system' }> = [];
+  const activity: ActivityEntry[] = [];
+  function record(title: string, detail: string) {
+    activity.unshift({ id: makeId('activity'), timestamp: new Date().toISOString(), actor: 'system', title, detail, status: 'complete' });
+  }
+  function assemble(operations: Operation[], label: string, detail: string) {
+    const next = applyOperations(content, operations, 'sample');
+    history.push({ content, revision, label, actor: 'system' });
+    content = next; revision += 1;
+    record(label, detail);
+  }
+  record('Prepared the sample source register', 'Codex assembled eight published primary sources. Source summaries are paraphrases. This activity records sample preparation, not work or approvals performed by you.');
+  assemble(nodes.map(node => ({ type: 'create_node', node })), 'Assembled the sample research cards', 'Added six claims, thirteen cited evidence items, and four open questions. All carry sample creation provenance.');
+  assemble(links.map(link => ({ type: 'link_evidence', link })), 'Mapped the reasoning', 'Recorded 25 support, challenge, and context connections. Left the accuracy-sentiment observation unlinked for a real review choice.');
+  assemble(conflicts.map(conflict => ({ type: 'flag_conflict', conflict })), 'Recorded three unresolved tensions', 'Preserved opposing productivity results, perception versus measurement, and the change between annual delivery surveys.');
+  assemble([{ type: 'set_conclusion', conclusion }], 'Drafted the illustrative decision', 'Added a reversible pilot recommendation. No user pilot, savings, approval, or deployment outcome is claimed by this example.');
+
+  const store = createBoardStore({ storage: null, session: { format: 'evidence-board-session', version: 1, content, revision, history, activity, changeSets: [] } });
+  store.proposeChangeSet({
+    title: 'Sample review — close three loose ends',
+    summary: 'Editable suggestions prepared by Codex for this example. Nothing below has been applied. Inspect the sources, adjust the wording, and choose what to accept. Approval and undo will update this saved board.',
+    baseRevision: revision,
+    changes: [
+      { id: 'sample_change_trust', title: 'Give the unlinked accuracy finding a clear role',
+        rationale: 'The survey describes sentiment, not actual accuracy. A context connection preserves that distinction while making the observation useful.',
+        operation: { type: 'link_evidence', link: link('evidence_trust', 'claim_review', 'context', 'Reported distrust helps explain the demand for review, but is not evidence of a measured defect rate or the effectiveness of a particular safeguard.') } },
+      { id: 'sample_change_agents', title: 'Make the missing local evidence more specific',
+        rationale: 'Separate the unknown result for this team from the known limitations of older studies. Retain low confidence until a local measurement exists.',
+        operation: { type: 'update_node', nodeId: 'claim_agents', patch: {
+          title: 'Current agent workflows need direct, local measurement.',
+          body: 'Sample working hypothesis: concurrent agents may help this team, but no local result exists. Evaluate the exact tool versions, task categories, human review time, overlapping attempts, and accepted output. The selected assistant studies and unreliable follow-up estimates provide context, not a transferable return estimate. Keep confidence low until those observations are recorded.',
+        } } },
+      { id: 'sample_change_gate', title: 'Add an explicit expansion and stop rule',
+        rationale: 'A pilot is easier to judge when decision rules are agreed before results arrive. These are suggested operating choices, not research findings.',
+        operation: { type: 'set_conclusion', conclusion: `${conclusion}\n\nSample expansion gate: agree the acceptable quality, review effort, and cost before starting. Expand only where comparable accepted changes improve without a material quality or security regression. Pause the affected workflow after a serious security finding or unapproved data exposure. Record the decision and its evidence instead of treating enthusiasm as approval.` } },
+    ],
+  }, 'sample');
+  store.setReviewOpen(false);
+  store.setNotice(null);
+  store.generateBrief();
+  return store;
+}

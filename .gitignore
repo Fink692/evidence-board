@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+test-results/
+playwright-report/
+*.tsbuildinfo
+*.log
+.env*
+!.env.example
+.local/
+evals/latest-results.json
+# Historical challenge recordings are retained locally, not deployed as product source.
+submission/**/*.mp4
+submission/**/*.wav
+submission/screenshots/*.png

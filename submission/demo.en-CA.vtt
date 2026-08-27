@@ -1,0 +1,192 @@
+WEBVTT
+
+NOTE Local synthetic narration draft: Microsoft System.Speech, stock en-CA voice. No external model or publication.
+
+scene-01-cue-01
+00:00:00.200 --> 00:00:03.626
+Evidence Board gives a research decision
+room to be questioned.
+
+scene-01-cue-02
+00:00:03.626 --> 00:00:08.362
+This fictional university is considering
+longer library hours during exams.
+
+scene-01-cue-03
+00:00:08.362 --> 00:00:09.994
+The current argument looks plausible,
+
+scene-01-cue-04
+00:00:09.994 --> 00:00:14.566
+but do its sources actually justify
+keeping the building open all night?
+
+scene-02-cue-01
+00:00:16.200 --> 00:00:20.285
+Seventy-two percent of voluntary survey
+respondents wanted later hours.
+
+scene-02-cue-02
+00:00:20.285 --> 00:00:22.871
+The question did not specify how late.
+
+scene-02-cue-03
+00:00:22.871 --> 00:00:27.068
+Meanwhile, only eight percent of trial
+entries occurred after midnight.
+
+scene-02-cue-04
+00:00:27.068 --> 00:00:30.871
+That is a share of entries, not occupancy
+or unmet demand.
+
+scene-02-cue-05
+00:00:30.871 --> 00:00:33.729
+The original wording stays visible beside
+the claim.
+
+scene-03-cue-01
+00:00:36.200 --> 00:00:41.506
+Ten structured WebMCP tools expose this
+shared board to a compatible browser agent.
+
+scene-03-cue-02
+00:00:41.506 --> 00:00:45.396
+Native registration and invocation have
+been tested in Chromium.
+
+scene-03-cue-03
+00:00:45.396 --> 00:00:48.633
+The setup panel reports actual
+availability.
+
+scene-03-cue-04
+00:00:48.633 --> 00:00:53.939
+Tools can inspect evidence and prepare
+proposals, but none can approve a change.
+
+scene-04-cue-01
+00:00:55.200 --> 00:00:58.470
+For this walkthrough, I’m using Run demo
+rehearsal:
+
+scene-04-cue-02
+00:00:58.470 --> 00:01:04.440
+a fixed six-call script through those same
+handlers, with no model or API key.
+
+scene-04-cue-03
+00:01:04.440 --> 00:01:08.995
+It proposes three changes and leaves every
+one for human review.
+
+scene-04-cue-04
+00:01:08.995 --> 00:01:11.945
+Nothing has entered the accepted record.
+
+scene-05-cue-01
+00:01:13.200 --> 00:01:16.920
+The first proposal connects overlooked
+counterevidence.
+
+scene-05-cue-02
+00:01:16.920 --> 00:01:21.040
+The second makes the survey–usage tension
+explicit.
+
+scene-05-cue-03
+00:01:21.040 --> 00:01:25.520
+The third adds a question about exam weeks
+versus ordinary weeks.
+
+scene-05-cue-04
+00:01:25.520 --> 00:01:29.275
+Each has its own rationale and proposed
+result.
+
+scene-05-cue-05
+00:01:29.275 --> 00:01:33.485
+I’ll keep the link and conflict, make the
+explanation more careful,
+
+scene-05-cue-06
+00:01:33.485 --> 00:01:36.075
+and leave the new question out.
+
+scene-06-cue-01
+00:01:38.200 --> 00:01:42.036
+Only when I click Apply selected does the
+accepted board change.
+
+scene-06-cue-02
+00:01:42.036 --> 00:01:44.601
+The unselected question is rejected.
+
+scene-06-cue-03
+00:01:44.601 --> 00:01:47.115
+Invalid references or an outdated revision
+are checked
+
+scene-06-cue-04
+00:01:47.115 --> 00:01:49.191
+before a proposal or approval is
+committed,
+
+scene-06-cue-05
+00:01:49.191 --> 00:01:53.241
+so a failed operation cannot leave half a
+change behind.
+
+scene-07-cue-01
+00:01:55.200 --> 00:02:00.480
+The decision brief is a deterministic,
+cited snapshot of the accepted board.
+
+scene-07-cue-02
+00:02:00.480 --> 00:02:03.145
+The accepted link and conflict are
+included;
+
+scene-07-cue-03
+00:02:03.145 --> 00:02:06.480
+the rejected research question is absent.
+
+scene-07-cue-04
+00:02:06.480 --> 00:02:09.795
+I can copy it or export Markdown.
+
+scene-07-cue-05
+00:02:09.795 --> 00:02:14.535
+This is the evidence record we reviewed,
+not a fresh AI answer.
+
+scene-08-cue-01
+00:02:15.200 --> 00:02:19.907
+Activity identifies the rehearsal and
+records tool inputs and results.
+
+scene-08-cue-02
+00:02:19.907 --> 00:02:22.988
+Undo restores the previous accepted
+content.
+
+scene-08-cue-03
+00:02:22.988 --> 00:02:26.799
+A structured list and JSON backup keep the
+same research usable
+
+scene-08-cue-04
+00:02:26.799 --> 00:02:30.307
+even when native browser-agent support is
+unavailable.
+
+scene-09-cue-01
+00:02:31.200 --> 00:02:34.795
+Evidence Board makes a second perspective
+inspectable.
+
+scene-09-cue-02
+00:02:34.795 --> 00:02:39.510
+Follow the sources, review the changes,
+and keep your judgement.
+

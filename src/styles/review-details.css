@@ -1,0 +1,6 @@
+.change-diff p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.change-operation { margin-top: 10px; color: #435844; font-size: 12px; }
+.change-operation summary { cursor: pointer; min-height: 28px; padding: 6px 0; width: fit-content; }
+.change-operation > p { font-size: 12px; line-height: 1.65; margin: 5px 0 9px; }
+.change-operation pre { margin: 0; padding: 14px; max-height: 260px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #f3f4ee; border: 1px solid #dce2d3; border-radius: 5px; font-size: 12px; line-height: 1.6; }
+.change-operation pre:focus-visible { outline: 2px solid #4b6c46; outline-offset: 3px; }

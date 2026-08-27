@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en-CA">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <title>Evidence Board — local demo draft</title>
+    <style>
+      :root { color-scheme: light; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #242824; background: #f5f4ef; }
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      main { max-width: 1664px; margin: 0 auto; padding: 28px 32px 48px; }
+      .eyebrow { color: #496e55; font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+      h1 { margin: 8px 0; font-size: clamp(1.6rem, 3vw, 2.5rem); line-height: 1.15; letter-spacing: -.04em; }
+      h2 { font-size: 1.1rem; margin-top: 0; }
+      p { max-width: 100ch; line-height: 1.6; }
+      .intro { margin: 8px 0 20px; color: #50584f; }
+      .player { border: 1px solid #c9d0c7; border-radius: 12px; overflow: hidden; background: #121a17; }
+      video { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; }
+      video::cue { color: #fff; background: rgba(12, 18, 15, .92); font-family: system-ui, sans-serif; }
+      a { color: #23583b; text-underline-offset: .2em; }
+      a:hover { text-decoration-thickness: 2px; }
+      :focus-visible { outline: 3px solid #226845; outline-offset: 4px; }
+      .status { min-height: 1.5em; margin: 10px 0 14px; font-size: .9rem; color: #50584f; }
+      .chapters { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 20px; }
+      button { font: inherit; font-size: .85rem; border: 1px solid #bdc8bc; color: #273e2f; background: #fff; border-radius: 6px; padding: 9px 12px; cursor: pointer; }
+      button:hover { background: #e8eee6; }
+      .disclosures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 24px 0; }
+      .disclosures section { background: #fff; border: 1px solid #d8ded4; border-radius: 9px; padding: 20px; }
+      .disclosures p { margin-bottom: 0; font-size: .94rem; }
+      .downloads { display: flex; flex-wrap: wrap; gap: 12px 24px; margin: 20px 0; }
+      details { background: #fff; border: 1px solid #d8ded4; border-radius: 9px; padding: 18px 20px; }
+      summary { cursor: pointer; font-weight: 650; }
+      .transcript { max-width: 92ch; margin-top: 24px; }
+      .transcript h3 { margin-top: 24px; font-size: .95rem; color: #355f43; }
+      .note { font-size: .9rem; color: #50584f; }
+      @media (max-width: 680px) { main { padding: 20px 16px 32px; } .disclosures { grid-template-columns: 1fr; } .disclosures section { padding: 16px; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">Working title · local draft · 2:40</div>
+      <h1>Evidence Board</h1>
+      <p class="intro">A real browser walkthrough, with a clearly labelled scripted rehearsal and generic synthetic narration. Captions are on by default. This is a local review asset, not a published submission.</p>
+
+      <div class="player">
+        <video id="demo-video" controls playsinline preload="metadata" aria-label="Evidence Board local narrated demonstration" aria-describedby="player-status">
+          <source src="evidence-board-demo-draft.mp4" type="video/mp4" />
+          <track id="english-captions" kind="captions" src="demo.en-CA.vtt" srclang="en-CA" label="English (Canada)" default />
+          Your browser cannot play this video. <a href="evidence-board-demo-draft.mp4">Download the MP4</a> or read the transcript below.
+        </video>
+      </div>
+      <p id="player-status" class="status" role="status">Use the native play, volume, captions, and fullscreen controls. Chapter buttons seek without starting playback.</p>
+      <nav class="chapters" aria-label="Video chapters">
+        <button type="button" data-seek="0">00:00 · The decision</button>
+        <button type="button" data-seek="16">00:16 · Read the sources</button>
+        <button type="button" data-seek="36">00:36 · Native tools</button>
+        <button type="button" data-seek="55">00:55 · Rehearsal</button>
+        <button type="button" data-seek="73">01:13 · Human review</button>
+        <button type="button" data-seek="98">01:38 · Approval</button>
+        <button type="button" data-seek="115">01:55 · Decision brief</button>
+        <button type="button" data-seek="135">02:15 · Activity and Undo</button>
+        <button type="button" data-seek="151">02:31 · Closing</button>
+      </nav>
+
+      <div class="disclosures" aria-label="Recording disclosures">
+        <section>
+          <h2>Real interface, scripted rehearsal</h2>
+          <p>The recording shows actual browser interactions. “Run demo rehearsal” uses a fixed six-call script through the real tool handlers. It is not AI inference. No external model or live browser-agent conversation was used.</p>
+        </section>
+        <section>
+          <h2>Native tool availability</h2>
+          <p>All ten tools were registered in the captured Chromium 151.0.7922.34 session with experimental WebMCP support enabled. Registration indicates available tools, not an external agent connection or a guarantee of support in another browser.</p>
+        </section>
+        <section>
+          <h2>Generic synthetic narration</h2>
+          <p>The voice is Microsoft Linda (Canadian English), generated locally with Windows System.Speech. It is a stock synthetic voice, not a human recording or an imitation of a named person. No external voice service was used.</p>
+        </section>
+        <section>
+          <h2>Draft review still required</h2>
+          <p>The example institution, statistics, and sources are fictional. Final name approval, human listening and synchronization review, public hosting, upload, and contest submission remain separate human release decisions.</p>
+        </section>
+      </div>
+
+      <div class="downloads" aria-label="Download local draft assets">
+        <a href="evidence-board-demo-draft.mp4" download>Download MP4 draft</a>
+        <a href="demo.en-CA.vtt" download>Download Canadian English captions</a>
+        <a href="recording/assembly-metadata.json">Inspect media metadata</a>
+      </div>
+
+      <details>
+        <summary>Read the complete narration transcript</summary>
+        <div class="transcript">
+          <h3>00:00 — The decision</h3>
+          <p>Evidence Board gives a research decision room to be questioned. This fictional university is considering longer library hours during exams. The current argument looks plausible, but do its sources actually justify keeping the building open all night?</p>
+          <h3>00:16 — Read the sources</h3>
+          <p>Seventy-two percent of voluntary survey respondents wanted later hours. The question did not specify how late. Meanwhile, only eight percent of trial entries occurred after midnight. That is a share of entries, not occupancy or unmet demand. The original wording stays visible beside the claim.</p>
+          <h3>00:36 — The integration surface</h3>
+          <p>Ten structured WebMCP tools expose this shared board to a compatible browser agent. Native registration and invocation have been tested in Chromium. The setup panel reports actual availability. Tools can inspect evidence and prepare proposals, but none can approve a change.</p>
+          <h3>00:55 — The labelled rehearsal</h3>
+          <p>For this walkthrough, I’m using Run demo rehearsal: a fixed six-call script through those same handlers, with no model or API key. It proposes three changes and leaves every one for human review. Nothing has entered the accepted record.</p>
+          <h3>01:13 — Human review</h3>
+          <p>The first proposal connects overlooked counterevidence. The second makes the survey–usage tension explicit. The third adds a question about exam weeks versus ordinary weeks. Each has its own rationale and proposed result. I’ll keep the link and conflict, make the explanation more careful, and leave the new question out.</p>
+          <h3>01:38 — Approval</h3>
+          <p>Only when I click Apply selected does the accepted board change. The unselected question is rejected. Invalid references or an outdated revision are checked before a proposal or approval is committed, so a failed operation cannot leave half a change behind.</p>
+          <h3>01:55 — The accepted record</h3>
+          <p>The decision brief is a deterministic, cited snapshot of the accepted board. The accepted link and conflict are included; the rejected research question is absent. I can copy it or export Markdown. This is the evidence record we reviewed, not a fresh AI answer.</p>
+          <h3>02:15 — Trace and Undo</h3>
+          <p>Activity identifies the rehearsal and records tool inputs and results. Undo restores the previous accepted content. A structured list and JSON backup keep the same research usable even when native browser-agent support is unavailable.</p>
+          <h3>02:31 — Closing</h3>
+          <p>Evidence Board makes a second perspective inspectable. Follow the sources, review the changes, and keep your judgement.</p>
+        </div>
+      </details>
+      <p class="note">Captions are supplied as a separate WebVTT file, not embedded in the MP4. This browser preview enables that track by default. Serve this folder over localhost for reliable caption loading; keep both files beside this page. No playback tracking or external resources are loaded.</p>
+    </main>
+    <script>
+      const video = document.getElementById('demo-video');
+      const status = document.getElementById('player-status');
+      for (const button of document.querySelectorAll('[data-seek]')) {
+        button.addEventListener('click', () => {
+          video.currentTime = Number(button.dataset.seek);
+          status.textContent = `Jumped to ${button.textContent}. Press play when ready.`;
+          video.focus();
+        });
+      }
+      video.addEventListener('error', () => {
+        status.textContent = 'The video could not load. Keep the MP4 and captions beside this preview, and open it through a local HTTP server. The downloads and transcript remain available.';
+      });
+    </script>
+  </body>
+</html>

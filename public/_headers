@@ -1,0 +1,6 @@
+/*
+  Origin-Agent-Cluster: ?1
+  Permissions-Policy: tools=(self), camera=(), microphone=(), geolocation=()
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self'
