@@ -137,6 +137,24 @@ test.describe('actual native WebMCP, without a model or API mocks', () => {
     expect(afterCancellation.changeSets).toEqual(after.changeSets);
   });
 
+  test('a native wording-only proposal does not silently change confidence', async ({ page }) => {
+    await page.goto('/?guest=1');
+    await requireNative(page);
+    await expect.poll(() => registeredNames(page)).toEqual(toolNames);
+    const { inputFormat } = await discoverAndReadSummary(page);
+    const before = await session(page);
+    const patch = { title: 'Measure current agents on our own tasks, including review.' };
+    const result = await invokeNative(page, 'propose_change_set', {
+      baseRevision: before.revision, title: 'A wording-only update', summary: 'Keep the existing confidence judgement.',
+      changes: [{ title: 'Clarify the wording', rationale: 'No new supporting evidence was added.', operation: { type: 'update_node', nodeId: 'claim_agents', patch } }],
+    }, inputFormat);
+    expect(result.structuredContent.status).toBe('proposal');
+    const after = await session(page);
+    const proposal = after.changeSets.find(set => set.title === 'A wording-only update')!;
+    expect(proposal.changes[0].operation).toEqual({ type: 'update_node', nodeId: 'claim_agents', patch });
+    expect(after.content).toEqual(before.content);
+  });
+
   test('removes native tools when leaving research and registers again on return', async ({ page, browser }) => {
     await page.goto('/?guest=1');
     await requireNative(page);

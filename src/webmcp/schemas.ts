@@ -6,7 +6,8 @@ const title = z.string().min(1).max(160).regex(/\S/);
 const text = z.string().min(1).max(3_000).regex(/\S/);
 const rationale = z.string().min(1).max(1_000).regex(/\S/)
   .describe('Why the human should consider this proposed change.');
-const confidence = z.enum(['high', 'medium', 'low']).default('medium');
+const confidenceValue = z.enum(['high', 'medium', 'low']);
+const confidence = confidenceValue.default('medium');
 const baseRevision = z.number().int().min(1).max(Number.MAX_SAFE_INTEGER - 1)
   .describe('The revision returned by get_board_summary. Stale proposals are rejected.');
 const stance = z.enum(['supports', 'challenges', 'context']);
@@ -50,7 +51,8 @@ export const proposedOperationSchema = z.discriminatedUnion('type', [
   z.strictObject({
     type: z.literal('update_node'),
     nodeId: id,
-    patch: z.strictObject({ title: title.optional(), body: text.optional(), confidence: confidence.optional() })
+    // Creation defaults must never add an omitted field to a partial update.
+    patch: z.strictObject({ title: title.optional(), body: text.optional(), confidence: confidenceValue.optional() })
       .refine((patch) => Object.keys(patch).length > 0, 'Supply at least one field to change.'),
   }),
   z.strictObject({ type: z.literal('delete_node'), nodeId: id }),

@@ -249,6 +249,31 @@ describe('semantic WebMCP handlers', () => {
     expect(store.getState().content.conclusion).toBe('A pending replacement conclusion.');
   });
 
+  it.each([{ title: 'A clearer title' }, { body: 'A revised interpretation.' }, { confidence: 'high' as const }])('preserves omitted fields in partial node updates: %j', async patch => {
+    const nodeId = store.getState().content.nodes[0].id;
+    store.applyHumanOperations([{ type: 'update_node', nodeId, patch: { confidence: 'low' } }], 'Record low confidence');
+    const before = structuredClone(store.getState().content);
+    data(await registry.invoke('propose_change_set', {
+      baseRevision: store.getState().revision, title: 'A specific update', summary: 'Change only the supplied fields.',
+      changes: [{ title: 'Edit selected fields', rationale: 'Unspecified judgements must be preserved.', operation: { type: 'update_node', nodeId, patch } }],
+    }));
+    const proposal = store.getState().changeSets[0];
+    expect(proposal.changes[0].operation).toEqual({ type: 'update_node', nodeId, patch });
+    expect(store.getState().content).toEqual(before);
+    store.applyChangeSet(proposal.id);
+    expect(store.getState().content.nodes.find(node => node.id === nodeId)).toEqual({ ...before.nodes[0], ...patch });
+    store.undo();
+    expect(store.getState().content).toEqual(before);
+  });
+
+  it('rejects an empty partial update instead of supplying a confidence default', async () => {
+    expectError(await registry.invoke('propose_change_set', {
+      baseRevision: store.getState().revision, title: 'An empty update', summary: 'An omitted patch is invalid.',
+      changes: [{ title: 'No fields', rationale: 'This must not reset confidence.', operation: { type: 'update_node', nodeId: store.getState().content.nodes[0].id, patch: {} } }],
+    }), 'INVALID_ARGUMENTS');
+    expect(store.getState().changeSets).toHaveLength(0);
+  });
+
   it('validates every focus target before moving any presentation state', async () => {
     const before = store.getState();
     expectError(await registry.invoke('focus_view', { nodeIds: ['claim_demand', 'missing_node'], view: 'list', filter: 'conflicts' }), 'NOT_FOUND');

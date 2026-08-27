@@ -6,7 +6,7 @@
     "id": "research_ai_coding_showcase_v1",
     "title": "AI coding: a measured rollout · Sample",
     "question": "Should a small software team adopt AI coding assistants and agents?",
-    "description": "An illustrative adoption decision prepared by Codex at your request, using real published research checked August 27, 2026. The team, pilot, and decisions are examples, not facts about your company. Explore the map, read the sources, open the decision brief, then review three suggested changes. One unlinked observation and one claim without direct supporting evidence are deliberately left open. Confidence is a recorded assessment, not an automated fact check.",
+    "description": "An illustrative adoption decision prepared by Codex at your request, using real published research checked August 27, 2026. The team, pilot, and decisions are examples, not facts about your company. Explore the map, read the sources, open the decision brief, then review three suggested changes. The initial sample leaves an observation unlinked and a claim without direct support, so you have real review choices. Confidence is a recorded assessment, not an automated fact check.",
     "conclusion": "Illustrative decision: run a reversible four-week pilot on bounded, low-risk coding tasks. Keep review and release authority with people. First record a baseline and agree how comparable tasks, unsuccessful attempts, and parallel agents will be counted. During the pilot, track completion time, reviewer effort, rework, defects, and cost per accepted change. At the end, expand only in task categories where local results justify it; retain the normal quality and security gates. Treat a small pilot as directional evidence, not proof that rare failures cannot occur. No pilot results or savings have been collected for this sample.",
     "nodes": [
       {
@@ -752,7 +752,7 @@
         "id": "research_ai_coding_showcase_v1",
         "title": "AI coding: a measured rollout · Sample",
         "question": "Should a small software team adopt AI coding assistants and agents?",
-        "description": "An illustrative adoption decision prepared by Codex at your request, using real published research checked August 27, 2026. The team, pilot, and decisions are examples, not facts about your company. Explore the map, read the sources, open the decision brief, then review three suggested changes. One unlinked observation and one claim without direct supporting evidence are deliberately left open. Confidence is a recorded assessment, not an automated fact check.",
+        "description": "An illustrative adoption decision prepared by Codex at your request, using real published research checked August 27, 2026. The team, pilot, and decisions are examples, not facts about your company. Explore the map, read the sources, open the decision brief, then review three suggested changes. The initial sample leaves an observation unlinked and a claim without direct support, so you have real review choices. Confidence is a recorded assessment, not an automated fact check.",
         "conclusion": "",
         "nodes": [],
         "links": [],
@@ -849,7 +849,7 @@
         "id": "research_ai_coding_showcase_v1",
         "title": "AI coding: a measured rollout · Sample",
         "question": "Should a small software team adopt AI coding assistants and agents?",
-        "description": "An illustrative adoption decision prepared by Codex at your request, using real published research checked August 27, 2026. The team, pilot, and decisions are examples, not facts about your company. Explore the map, read the sources, open the decision brief, then review three suggested changes. One unlinked observation and one claim without direct supporting evidence are deliberately left open. Confidence is a recorded assessment, not an automated fact check.",
+        "description": "An illustrative adoption decision prepared by Codex at your request, using real published research checked August 27, 2026. The team, pilot, and decisions are examples, not facts about your company. Explore the map, read the sources, open the decision brief, then review three suggested changes. The initial sample leaves an observation unlinked and a claim without direct support, so you have real review choices. Confidence is a recorded assessment, not an automated fact check.",
         "conclusion": "",
         "nodes": [
           {
@@ -1259,7 +1259,7 @@
         "id": "research_ai_coding_showcase_v1",
         "title": "AI coding: a measured rollout · Sample",
         "question": "Should a small software team adopt AI coding assistants and agents?",
-        "description": "An illustrative adoption decision prepared by Codex at your request, using real published research checked August 27, 2026. The team, pilot, and decisions are examples, not facts about your company. Explore the map, read the sources, open the decision brief, then review three suggested changes. One unlinked observation and one claim without direct supporting evidence are deliberately left open. Confidence is a recorded assessment, not an automated fact check.",
+        "description": "An illustrative adoption decision prepared by Codex at your request, using real published research checked August 27, 2026. The team, pilot, and decisions are examples, not facts about your company. Explore the map, read the sources, open the decision brief, then review three suggested changes. The initial sample leaves an observation unlinked and a claim without direct support, so you have real review choices. Confidence is a recorded assessment, not an automated fact check.",
         "conclusion": "",
         "nodes": [
           {
@@ -1870,7 +1870,7 @@
         "id": "research_ai_coding_showcase_v1",
         "title": "AI coding: a measured rollout · Sample",
         "question": "Should a small software team adopt AI coding assistants and agents?",
-        "description": "An illustrative adoption decision prepared by Codex at your request, using real published research checked August 27, 2026. The team, pilot, and decisions are examples, not facts about your company. Explore the map, read the sources, open the decision brief, then review three suggested changes. One unlinked observation and one claim without direct supporting evidence are deliberately left open. Confidence is a recorded assessment, not an automated fact check.",
+        "description": "An illustrative adoption decision prepared by Codex at your request, using real published research checked August 27, 2026. The team, pilot, and decisions are examples, not facts about your company. Explore the map, read the sources, open the decision brief, then review three suggested changes. The initial sample leaves an observation unlinked and a claim without direct support, so you have real review choices. Confidence is a recorded assessment, not an automated fact check.",
         "conclusion": "",
         "nodes": [
           {

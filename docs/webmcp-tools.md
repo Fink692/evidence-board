@@ -51,7 +51,7 @@ The real-browser checks demonstrated read purity, argument errors, a pending pro
 
 ### Current judging build verification, August 27, 2026
 
-The current guest experience passed all 22 Playwright tests in Chromium 151.0.7922.34, including three actual native WebMCP tests. With explicit WebMCP/WebMCPTesting flags, all ten tools registered; a native read preserved accepted content; invalid arguments were rejected; a native write produced a pending proposal without acceptance; and pre-dispatch cancellation produced no proposal. Actual navigation from the board to the landing page and back gave 10 → 0 → 10 tools. No modelContext mock or external model was used.
+The current guest experience passed all 23 Playwright tests in Chromium 151.0.7922.34, including four actual native WebMCP tests. With explicit WebMCP/WebMCPTesting flags, all ten tools registered; a native read preserved accepted content; invalid arguments were rejected; a native write produced a pending proposal without acceptance; and pre-dispatch cancellation produced no proposal. A wording-only update preserved omitted confidence fields. Actual navigation from the board to the landing page and back gave 10 → 0 → 10 tools. No modelContext mock or external model was used.
 
 The compiled app additionally passed desktop Chromium and mobile WebKit review, brief, export-state/undo, security-header, CSP, and no-external-request checks. Mobile started in the structured list without downloading the graph chunk. These observations concern the local compiled build; hosted verification is recorded separately after deployment. The 151 callback-signal limitation described above still applies.
 

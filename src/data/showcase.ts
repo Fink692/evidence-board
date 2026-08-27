@@ -159,7 +159,7 @@ export function createShowcaseStore() {
   let content: BoardContent = validateContent({
     id: SHOWCASE_BOARD_ID, title: 'AI coding: a measured rollout · Sample',
     question: 'Should a small software team adopt AI coding assistants and agents?',
-    description: 'An illustrative adoption decision prepared by Codex at your request, using real published research checked August 27, 2026. The team, pilot, and decisions are examples, not facts about your company. Explore the map, read the sources, open the decision brief, then review three suggested changes. One unlinked observation and one claim without direct supporting evidence are deliberately left open. Confidence is a recorded assessment, not an automated fact check.',
+    description: 'An illustrative adoption decision prepared by Codex at your request, using real published research checked August 27, 2026. The team, pilot, and decisions are examples, not facts about your company. Explore the map, read the sources, open the decision brief, then review three suggested changes. The initial sample leaves an observation unlinked and a claim without direct support, so you have real review choices. Confidence is a recorded assessment, not an automated fact check.',
     conclusion: '', sources, nodes: [], links: [], conflicts: [],
   });
   let revision = 1;
