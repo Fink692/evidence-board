@@ -37,7 +37,7 @@ function rangeFor(value: string | null): ByteRange | null {
 
 async function fill(bucket: MediaBucket, download: typeof fetch) {
   const response = await download(WALKTHROUGH.source, { redirect: 'error', signal: AbortSignal.timeout(45_000) });
-  if (!response.ok || !response.body) { await response.body?.cancel(); throw new Error('Pinned recording could not be fetched.'); }
+  if (!response.ok || !response.body) { await response.body?.cancel(); throw new Error(`Pinned recording could not be fetched (HTTP ${response.status}).`); }
   const declared = response.headers.get('content-length');
   if (declared && Number(declared) !== WALKTHROUGH.bytes) { await response.body.cancel(); throw new Error('Recording size does not match.'); }
   const bytes = new Uint8Array(WALKTHROUGH.bytes);
@@ -91,7 +91,9 @@ export async function handleWalkthrough(request: Request, bucket?: MediaBucket, 
     if (!object?.body) throw new Error('Stored recording body is unavailable.');
     if (requested) headers.set('Content-Range', `bytes ${requested.offset}-${requested.offset + requested.length - 1}/${metadata.size}`);
     return new Response(object.body, { status: requested ? 206 : 200, headers });
-  } catch {
+  } catch (error) {
+    // Fixed public asset only. Keep details in server logs, never the response.
+    console.error('public_media_unavailable', error instanceof Error ? error.message.slice(0, 240) : 'Unknown storage failure');
     return new Response('The video is temporarily unavailable. Please try again shortly.', { status: 503, headers: { 'Cache-Control': 'no-store', 'Retry-After': '30' } });
   }
 }
