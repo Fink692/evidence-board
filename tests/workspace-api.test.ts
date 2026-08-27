@@ -1,5 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { readFile } from 'node:fs/promises';
 import { handleApi } from '../server/api';
+import { handleWalkthrough, WALKTHROUGH, type MediaBucket, type MediaObject } from '../server/media';
+import worker from '../server/worker';
 import { openLocalDatabase } from '../server/local-database';
 import { createEmptyContent, createSeedContent } from '../src/data/seed';
 import { createShowcaseStore } from '../src/data/showcase';
@@ -17,6 +20,122 @@ function request(path: string, method = 'GET', body?: unknown, user = 'alice', e
 }
 const session = () => JSON.parse(store.exportSession());
 const create = (id = 'research_one', user = 'alice') => request('/api/boards', 'POST', { id, session: session() }, user);
+
+let recording: Promise<Buffer>;
+const videoBytes = () => recording ??= readFile(new URL('../public/evidence-board-walkthrough.mp4', import.meta.url));
+function mediaFixture(initiallyPresent = true) {
+  let present = initiallyPresent;
+  const metadata: MediaObject = { size: WALKTHROUGH.bytes, httpEtag: '"recording-etag"', customMetadata: { sha256: WALKTHROUGH.sha256 } };
+  const head = vi.fn(async () => present ? metadata : null);
+  const get = vi.fn(async (_key: string, options?: { range?: { offset: number; length: number } }) => {
+    if (!present) return null;
+    const range = options?.range;
+    const bytes = await videoBytes();
+    return { ...metadata, body: new Response(new Uint8Array(range ? bytes.subarray(range.offset, range.offset + range.length) : bytes)).body! };
+  });
+  const put = vi.fn(async () => { present = true; return metadata; });
+  const bucket: MediaBucket = { head, get, put };
+  return { bucket, head, get, put };
+}
+const videoRequest = (headers: Record<string, string> = {}, method = 'GET') => new Request(`https://research.example.test${WALKTHROUGH.path}`, { method, headers });
+
+describe('public recording in separate object storage', () => {
+  it('serves bounded and suffix byte ranges with correct bytes and headers', async () => {
+    const { bucket } = mediaFixture();
+    for (const [range, offset, length] of [['bytes=0-63', 0, 64], ['bytes=-32', WALKTHROUGH.bytes - 32, 32], [`bytes=${WALKTHROUGH.bytes - 16}-`, WALKTHROUGH.bytes - 16, 16]] as const) {
+      const response = await handleWalkthrough(videoRequest({ Range: range }), bucket);
+      expect(response.status).toBe(206);
+      expect(response.headers.get('content-range')).toBe(`bytes ${offset}-${offset + length - 1}/${WALKTHROUGH.bytes}`);
+      expect(response.headers.get('content-length')).toBe(String(length));
+      expect(Buffer.from(await response.arrayBuffer())).toEqual((await videoBytes()).subarray(offset, offset + length));
+    }
+  });
+  it('rejects malformed and unsatisfiable byte ranges without reading the body', async () => {
+    const { bucket, get } = mediaFixture();
+    for (const range of ['bytes=-0', 'bytes=50-20', `bytes=${WALKTHROUGH.bytes}-`, 'bytes=99999999999999999999-']) {
+      const response = await handleWalkthrough(videoRequest({ Range: range }), bucket);
+      expect(response.status).toBe(416);
+      expect(response.headers.get('content-range')).toBe(`bytes */${WALKTHROUGH.bytes}`);
+    }
+    expect(get).not.toHaveBeenCalled();
+  });
+  it('supports HEAD and conditional cache validation without reading the body', async () => {
+    const { bucket, get } = mediaFixture();
+    const head = await handleWalkthrough(videoRequest({ Range: 'bytes=0-9' }, 'HEAD'), bucket);
+    expect(head.status).toBe(200);
+    expect(head.headers.get('content-length')).toBe(String(WALKTHROUGH.bytes));
+    expect(await head.text()).toBe('');
+    expect((await handleWalkthrough(videoRequest({ 'If-None-Match': 'W/"recording-etag"' }), bucket)).status).toBe(304);
+    expect((await handleWalkthrough(videoRequest({ 'If-None-Match': '"recording-etag"', Range: `bytes=${WALKTHROUGH.bytes}-` }), bucket)).status).toBe(304);
+    expect(get).not.toHaveBeenCalled();
+  });
+  it('ignores stale If-Range validators and unsupported range forms', async () => {
+    const { bucket, get } = mediaFixture();
+    const response = await handleWalkthrough(videoRequest({ Range: 'bytes=0-9', 'If-Range': '"old"' }), bucket);
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-range')).toBeNull();
+    expect(get.mock.calls[0][1]).toBeUndefined();
+    await response.body?.cancel();
+    const oldRange = await handleWalkthrough(videoRequest({ Range: `bytes=${WALKTHROUGH.bytes}-`, 'If-Range': '"old"' }), bucket);
+    expect(oldRange.status).toBe(200);
+    await oldRange.body?.cancel();
+    for (const range of ['items=0-5', 'bytes=0-1,5-8']) {
+      const unsupported = await handleWalkthrough(videoRequest({ Range: range }), bucket);
+      expect(unsupported.status).toBe(200);
+      expect(unsupported.headers.get('content-range')).toBeNull();
+      await unsupported.body?.cancel();
+    }
+  });
+  it('verifies the pinned source and fills an empty bucket once for concurrent requests', async () => {
+    const fixture = mediaFixture(false);
+    const download = vi.fn(async () => new Response(new Uint8Array(await videoBytes())));
+    const [first, second] = await Promise.all([
+      handleWalkthrough(videoRequest({ Range: 'bytes=0-15' }), fixture.bucket, download),
+      handleWalkthrough(videoRequest({}, 'HEAD'), fixture.bucket, download),
+    ]);
+    expect(first.status).toBe(206); expect(second.status).toBe(200);
+    expect(download).toHaveBeenCalledExactlyOnceWith(WALKTHROUGH.source, expect.objectContaining({ redirect: 'error' }));
+    expect(fixture.put).toHaveBeenCalledOnce();
+    expect(Buffer.from(await first.arrayBuffer())).toEqual((await videoBytes()).subarray(0, 16));
+  });
+  it('does not store a recording with a bad checksum or unexpected declared size', async () => {
+    const fixture = mediaFixture(false);
+    const corrupt = new Uint8Array(await videoBytes()); corrupt[0] ^= 255;
+    const badHash = await handleWalkthrough(videoRequest(), fixture.bucket, async () => new Response(corrupt));
+    expect(badHash.status).toBe(503);
+    const badSize = await handleWalkthrough(videoRequest(), fixture.bucket, async () => new Response('wrong', { headers: { 'Content-Length': '5' } }));
+    expect(badSize.status).toBe(503);
+    expect(fixture.put).not.toHaveBeenCalled();
+  });
+  it('exposes no public mutation method and reports an unavailable binding honestly', async () => {
+    const { bucket, head } = mediaFixture();
+    for (const method of ['POST', 'PUT', 'DELETE']) expect((await handleWalkthrough(videoRequest({}, method), bucket)).status).toBe(405);
+    expect(head).not.toHaveBeenCalled();
+    const response = await handleWalkthrough(videoRequest());
+    expect(response.status).toBe(503);
+    expect(response.headers.get('cache-control')).toBe('no-store');
+  });
+  it('bounds streams without Content-Length and permits a valid retry after failed fills', async () => {
+    const fixture = mediaFixture(false);
+    for (const length of [3, WALKTHROUGH.bytes + 1]) {
+      const stream = new ReadableStream<Uint8Array>({ start(controller) { controller.enqueue(new Uint8Array(length)); controller.close(); } });
+      const failed = await handleWalkthrough(videoRequest({}, 'HEAD'), fixture.bucket, async () => new Response(stream));
+      expect(failed.status).toBe(503);
+    }
+    expect(fixture.put).not.toHaveBeenCalled();
+    const retried = await handleWalkthrough(videoRequest({}, 'HEAD'), fixture.bucket, async () => new Response(new Uint8Array(await videoBytes())));
+    expect(retried.status).toBe(200);
+    expect(fixture.put).toHaveBeenCalledOnce();
+  });
+  it('routes anonymous video access without granting account workspace access', async () => {
+    const { bucket } = mediaFixture();
+    const media = await worker.fetch(videoRequest({ Range: 'bytes=0-3' }), { DB: db, MEDIA: bucket });
+    expect(media.status).toBe(206);
+    await media.body?.cancel();
+    const account = await worker.fetch(new Request('https://research.example.test/api/workspace'), { DB: db, MEDIA: bucket });
+    expect(account.status).toBe(401);
+  });
+});
 
 describe('authenticated durable research workspace', () => {
   it('starts empty and rejects anonymous research access', async () => {

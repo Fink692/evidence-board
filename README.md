@@ -51,6 +51,8 @@ The tests cover domain rules, native adapter contracts, selective review, full-s
 
 A build emits browser assets in dist/client and the Sites Worker in dist/server/index.js. The Sites plugin packages binding metadata and Drizzle migrations. For schema changes, edit db/schema.ts, run pnpm db:generate, and inspect the migration. Production identity comes from Sites; there is no production local-auth bypass or application AI key.
 
+The 21 MB walkthrough stays in the source repository for local use but is excluded from the Worker bundle. Production serves it from the `MEDIA` R2 binding at the same playback URL. On first use, the server copies only the fixed, public recording from a pinned GitHub commit after checking its exact length and SHA-256. Subsequent requests use R2, including byte ranges and cache validation. This is not an upload endpoint or an arbitrary URL proxy; no research data is sent to GitHub. See [Cloudflare's R2 API](https://developers.cloudflare.com/r2/api/workers/workers-api-reference/) for the underlying storage interface.
+
 The public judging Site is separate from the original owner's private Site and database. .openai/hosting.json binds this checkout to the judging Site. Do not reuse that project ID for your own deployment. Deploy compiled output through Sites; never include local databases, environment files, credentials, or private boards.
 
 ## Submission and license

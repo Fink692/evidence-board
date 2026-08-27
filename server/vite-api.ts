@@ -1,6 +1,6 @@
 import type { Plugin, PreviewServer, ViteDevServer } from 'vite';
 import { sites } from '@openai/sites-vite-plugin';
-import { mkdirSync } from 'node:fs';
+import { createReadStream, mkdirSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { openLocalDatabase } from './local-database';
@@ -30,6 +30,18 @@ export function researchApi(): Plugin {
     name: 'evidence-board-local-api',
     configureServer(server) { mountApi(server, async () => (await server.ssrLoadModule('/server/api.ts')).handleApi); },
     async configurePreviewServer(server) {
+      // The production Worker streams this fixed recording from R2. A local
+      // preview can use the checked-in original without any network bootstrap.
+      server.middlewares.use((req, res, next) => {
+        if (req.url?.split('?')[0] !== '/evidence-board-walkthrough.mp4') { next(); return; }
+        if (!['GET', 'HEAD'].includes(req.method || 'GET')) { res.writeHead(405, { Allow: 'GET, HEAD' }); res.end(); return; }
+        try {
+          const media = resolve('public/evidence-board-walkthrough.mp4');
+          res.writeHead(200, { 'Content-Type': 'video/mp4', 'Content-Length': statSync(media).size, 'Cache-Control': 'no-store' });
+          if (req.method === 'HEAD') res.end();
+          else createReadStream(media).on('error', () => res.destroy()).pipe(res);
+        } catch { res.writeHead(503); res.end('The local recording is unavailable.'); }
+      });
       // Reuse Sites' loopback-only sign-in simulator for local production preview.
       // This development plugin is never imported by the production Worker.
       const auth = sites().configureServer;

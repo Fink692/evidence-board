@@ -19,6 +19,8 @@ Chromium must expose native WebMCP with the `WebMCP` and `WebMCPTesting` feature
 
 The public MP4, screenshot, and WebVTT captions are checked into `public/`. The video is H.264 with an AAC narration track. Captions are separate WebVTT so a viewer can enable or disable them. The voice is the generic Microsoft Linda en-CA voice, not a person being impersonated.
 
+Production excludes the MP4 from the Worker bundle and serves it from the Site's `MEDIA` R2 binding. The first request fills that fixed object from a pinned public GitHub commit only after byte-count and SHA-256 checks. GET, HEAD, ranges, and ETag validation are supported; public uploads and arbitrary fetch URLs are not. If you replace the recording, update the manifest in `server/media.ts` and the matching build check in `scripts/prepare-media-build.mjs`. The checked-in original still serves local development and preview.
+
 The assembly helper accepts an artifact directory containing `capture-final/`, a 160-second `audio/narration.wav`, and its matching `audio/narration-metadata.json`. Local voice generation files and raw captures are not checked into the public repository. If making a new recording, supply your own licensed narration and matching metadata; the published MP4 already contains the final narration.
 
 ```powershell

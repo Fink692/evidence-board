@@ -30,6 +30,8 @@ Playwright invokes the native tools and operates the human controls. No external
 
 ## Media
 
+Embedding the full video in the Worker exceeded the host's bundle limit. The final build keeps the MP4 in source for local use, excludes it from generated Worker assets, and serves the fixed recording through R2. The first server-side fill checks the pinned public source's size and SHA-256; later requests stream the stored object. No caller-supplied URL, arbitrary object key, upload, or public mutation method is exposed. Nine additional HTTP/storage regressions bring the current unit/API suite to **156 passing tests**; the earlier application-only counts above remain scoped to their recorded release.
+
 | Property | Verified artifact |
 | --- | --- |
 | File | `public/evidence-board-walkthrough.mp4` |
