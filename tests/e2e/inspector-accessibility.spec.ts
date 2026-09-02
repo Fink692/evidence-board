@@ -96,6 +96,11 @@ test('the measured map moves to the evidence selected by the shared focus contro
   await expect(page.getByRole('complementary', { name: 'Evidence inspector' })).toContainText('Developers reported more distrust than trust.');
 });
 
+test('the evidence map keeps the React Flow attribution visible', async ({ page }) => {
+  await page.goto('/?guest=1');
+  await expect(page.getByRole('link', { name: 'React Flow attribution', exact: true })).toBeVisible();
+});
+
 test('mobile navigation keeps keyboard focus visible, supports nested dialogs, and cleans up on resize', async ({ page }) => {
   test.setTimeout(60_000);
   await page.emulateMedia({ reducedMotion: 'reduce' });
