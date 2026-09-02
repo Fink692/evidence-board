@@ -328,7 +328,6 @@ function MapCanvas({ state, store }: EvidenceViewProps) {
         onPaneClick={() => store.selectNode(null)}
         onEdgeClick={(_, edge) => store.selectNode(edge.source)}
         onNodeClick={(_, node) => store.selectNode(node.id)}
-        proOptions={{ hideAttribution: true }}
         colorMode="light"
       >
         <Background variant={BackgroundVariant.Dots} color="#d4d9cc" gap={20} size={1.15} />
