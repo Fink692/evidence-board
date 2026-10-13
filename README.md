@@ -1,6 +1,6 @@
 # Evidence Board
 
-**Better evidence. Clearer decisions.** A research workspace for people and browser agents, with original sources, visible reasoning, and human approval of agent proposals.
+A research workspace for people and browser agents, with original sources, visible reasoning, and human approval of agent proposals.
 
 ## Try the sample
 
